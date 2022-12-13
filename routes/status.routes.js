@@ -2,6 +2,16 @@ const express = require("express");
 const Status = require("../models/Status");
 const router = express.Router();
 
+router.get('/', async (req, res, next) => {
+  try {
+      const status = await Status.find().populate('cars');
+      return res.status(200).json(status)
+  } catch (error) {
+      return next(error)
+  }
+});
+
+
 router.post("/create", async (req, res, next) => {
   try {
     const newStatus = new Status({
@@ -16,19 +26,20 @@ router.post("/create", async (req, res, next) => {
   }
 });
 
-router.put("/add-car", async (req, res, next) => {
+router.put('/add-car', async (req, res, next) => {
   try {
-    const { statusId } = req.body;
-    const { carId } = req.body;
-    const updatedLocation = await Location.findByIdAndUpdate(
-      locationId,
-      { $push: { characters: characterId } },
-      { new: true }
-    );
-    return res.status(200).json(updatedLocation);
+      const { statusId } = req.body;
+      const { carId } = req.body;
+      const updatedStatus = await Status.findByIdAndUpdate(
+          statusId,
+          { $push: { cars: carId } },
+          { new: true }
+      );
+      return res.status(200).json(updatedStatus);
   } catch (error) {
-    return next(error);
+      return next(error);
   }
 });
+
 
 module.exports = router;
