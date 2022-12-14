@@ -4,7 +4,6 @@ const Schema = mongoose.Schema;
 const statusSchema = new Schema(
   {
     status: { type: String, enum: ["Nuevo", "Segunda-mano"], required: true },
-    km: { type: Number },
     cars: [{ type: mongoose.Types.ObjectId, ref: "Car" }],
   },
   {

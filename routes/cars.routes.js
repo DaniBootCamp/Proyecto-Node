@@ -39,6 +39,23 @@ router.get("/modelo/:modelo", async (req, res) => {
   }
 });
 
+router.put('/:id', async (req, res, next) => {
+	try {
+	  const { id } = req.params;
+	  const carEdit = new Car(req.body);
+	  carEdit._id = id;
+	  const car = await Car.findByIdAndUpdate(id, carEdit);
+	  if (car) {
+		return res.status(200).json(carEdit);
+	  } else {
+		return res.status(404).json('No car found');
+	  }
+	} catch (error) {
+	  return next(error);
+	}
+  });
+  
+
 router.get("/marca/:marca", async (req, res) => {
   const { marca } = req.params;
 

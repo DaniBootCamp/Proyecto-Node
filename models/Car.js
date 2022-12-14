@@ -8,6 +8,7 @@ const carSchema = new Schema(
     marca: { type: String, required: true },
     modelo: { type: String },
     potencia: { type: Number },
+    km: { type: Number },
     mercado: {
       type: String,
       enum: ["Americano", "Europeo", "Japonés"],
