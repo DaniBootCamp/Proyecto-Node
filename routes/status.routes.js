@@ -1,8 +1,7 @@
 const express = require("express");
 const Status = require("../models/Status");
 const router = express.Router();
-const cors = require('cors');
-app.use(cors());
+
 
 router.get('/', async (req, res, next) => {
   try {
