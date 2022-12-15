@@ -30,3 +30,9 @@ server.use("/status", statusRoutes);
 server.listen(PORT, () => {
   console.log(`Server running in http://localhost:${PORT}`);
 });
+
+server.use(express.static(__dirname));
+
+server.get("/", (req, res) => {
+  res.sendFile(__dirname + "/index.html");
+});

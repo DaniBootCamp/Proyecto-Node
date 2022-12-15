@@ -1,9 +1,9 @@
-// Archivo Character.js dentro de la carpeta models
+
 const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
-const carSchema = new Schema(
+const carSchema = new Schema( //SCHEMA DE CAR
   {
     marca: { type: String, required: true },
     modelo: { type: String },

@@ -3,21 +3,15 @@ const bcrypt = require("bcrypt");
 
 const jwt = require("jsonwebtoken");
 
-
-// Codificamos las operaciones que se podran realizar con relacion a los usuarios
 const createUser = async (req, res, next) => {
   try {
     const newUser = new User();
     newUser.email = req.body.email;
     const pwdHash = await bcrypt.hash(req.body.password, 10);
     newUser.password = pwdHash;
-
-
     
     const userDb = await newUser.save();
     
-    //Pnt. mejora: autenticar directamente al usuario
-
     return res.json({
       status: 201,
       message: 'User Created Correctly',
@@ -45,7 +39,6 @@ const authenticate = async (req, res, next) => {
         req.app.get("secretKey"),
         { expiresIn: "1h" }
       );
-      //devolvemos el usuario y el token.
       return res.json({
         status: 200,
         message: 'Logued',
@@ -58,7 +51,7 @@ const authenticate = async (req, res, next) => {
     return next(err);
   }
 }
-//funcion logout, iguala el token a null.
+
 const logout = (req, res, next) => {
   try {
     return res.json({

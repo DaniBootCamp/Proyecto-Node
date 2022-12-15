@@ -11,16 +11,16 @@ const storage = multer.diskStorage({
         console.log('filename ->', file);
         cb(null, `${Date.now()}-${file.originalname}`);
     },
-    // destination: (req, file, cb) => {
-    //     cb(null, path.join(__dirname, '../temp'))
-    // },
+     destination: (req, file, cb) => {
+         cb(null, path.join(__dirname, '../temp'))
+     },
 });
 
 const VALID_FILE_TYPES = ['image/png', 'image/jpg', 'image/jpeg'];
 
 const fileFilter = (req, file, cb) => {
     if (!VALID_FILE_TYPES.includes(file.mimetype)) {
-        const error = new Error("Invalid file type");
+        const error = new Error("file not supported");
         cb(error)
     } else {
         cb(null, true);
