@@ -2,16 +2,19 @@ const User = require("../models/User");
 const bcrypt = require("bcrypt");
 
 const jwt = require("jsonwebtoken");
-
+//creacion de User
 const createUser = async (req, res, next) => {
   try {
     const newUser = new User();
     newUser.email = req.body.email;
     const pwdHash = await bcrypt.hash(req.body.password, 10);
     newUser.password = pwdHash;
-    
+    const result = await User.exists({ email: newUser.email });
+    if (result) {
+      return res.status(404).json('Already used');
+    } else { 
     const userDb = await newUser.save();
-    
+    }
     return res.json({
       status: 201,
       message: 'User Created Correctly',
@@ -21,16 +24,12 @@ const createUser = async (req, res, next) => {
     return next(err);
   }
 }
-
+// Login de user
 const authenticate = async (req, res, next) => {
   try {
-    //Buscamos al user en bd
     const userInfo = await User.findOne({ email: req.body.email })
-    //Comparamos la contraseña
     if (bcrypt.compareSync(req.body.password, userInfo.password)) {
-      //eliminamos la contraseña del usuario
       userInfo.password = null
-      //creamos el token con el id y el name del user
       const token = jwt.sign(
         {
           id: userInfo._id,
@@ -45,13 +44,13 @@ const authenticate = async (req, res, next) => {
         data: { user: userInfo, token: token },
       });
     } else {
-      return res.json({ status: 400, data: null });
+      return res.json({ status: 400, message: 'bad password', data: null });
     }
   } catch (err) {
     return next(err);
   }
 }
-
+// Logout de user
 const logout = (req, res, next) => {
   try {
     return res.json({

@@ -1,19 +1,17 @@
 //importamos jwt
 const jwt = require("jsonwebtoken")
 const isAuth = (req, res, next) => {
-    //guardamos en una variable la información de la autorizacion de la cabecera
-    //de la petición
+    //Autorización de la peticion
     const authorization = req.headers.authorization;
-    //si no existe autorizacion, no hay token y se retorna error
+    //Si esta autorizado hay bearer token, si no, error
     if(!authorization){
         return res.json({
             status: 401,
-            message: HTTPSTATUSCODE[401],
+            message: 'Error de autenticación',
             data: null
         })
     }
-    //si hay token, lo "troceamos " para separar la parte bearer de la info
-    //del token
+    //se separa Bearer del token
     const splits = authorization.split(" ")
     if( splits.length!=2 || splits[0]!="Bearer"){
         return res.json({
@@ -22,7 +20,6 @@ const isAuth = (req, res, next) => {
             data: null
         })
     }
-    //guardamos la info del token en una variable
     const jwtString = splits[1];
     try{
         //verificamos el token y si es ok lo guardamos en una variable
