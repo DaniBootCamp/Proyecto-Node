@@ -11,9 +11,9 @@ const storage = multer.diskStorage({
         console.log('filename ->', file);
         cb(null, `${Date.now()}-${file.originalname}`);
     },
-    destination: (req, file, cb) => {
-        cb(null, path.join(__dirname, '../temp'))
-    },
+    // destination: (req, file, cb) => {
+    //     cb(null, path.join(__dirname, '../temp'))
+    // },
 });
 
 const VALID_FILE_TYPES = ['image/png', 'image/jpg', 'image/jpeg'];
@@ -38,7 +38,7 @@ const uploadToCloudinary = async (req, res, next) => {
 		const filePath = req.file.path;
     const image = await cloudinary.uploader.upload(filePath);
 
-    await fs.unlinkSync(filePath);
+    // await fs.unlinkSync(filePath);
 	
     req.file_url = image.secure_url;
 		return next();
