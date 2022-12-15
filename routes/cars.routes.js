@@ -1,6 +1,5 @@
 // Archivo character.routes.js dentro de la carpeta routes
 const express = require('express');
-const mongoose = require('mongoose');
 const Car = require('../models/Car');
 const filesMiddleware = require('../middlewares/files.middleware')
 const router = express.Router();
