@@ -6,15 +6,7 @@ const path = require('path');
 const fs = require('fs');
 const cloudinary = require('cloudinary').v2;
 
-const storage = multer.diskStorage({
-    filename: (req, file, cb) => {
-        console.log('filename ->', file);
-        cb(null, `${Date.now()}-${file.originalname}`);
-    },
-     destination: (req, file, cb) => {
-         cb(null, path.join(__dirname, '../temp'))
-     },
-});
+const storage = multer.memoryStorage();
 
 const VALID_FILE_TYPES = ['image/png', 'image/jpg', 'image/jpeg'];
 
@@ -33,21 +25,25 @@ const upload = multer({
 });
 
 const uploadToCloudinary = async (req, res, next) => {
-	if (req.file) {
-    try{
-		const filePath = req.file.path;
-    const image = await cloudinary.uploader.upload(filePath);
-
-    await fs.unlinkSync(filePath);
-	
-    req.file_url = image.secure_url;
-		return next();
-    }catch(error){
-      return next(error)
+	const bufferToStream = (buffer) => {
+    const readable = new Readable({
+      read() {
+        this.push(buffer);
+        this.push(null);
+      },
+    });
+    return readable;
+  };
+  const data = await sharp(req.file.buffer).toBuffer();
+  const stream = cloudinary.uploader.upload_stream(
+    { folder: "TEMP" },
+    (error, result) => {
+      if (error) return next(error);
+      req.file_url = result.secure_url;
+      return next();
     }
-  } else {
-    return next();
-  }
+  );
+  bufferToStream(data).pipe(stream);
 };
 
 module.exports = { upload: upload, uploadToCloudinary };

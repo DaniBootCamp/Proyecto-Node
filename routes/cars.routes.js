@@ -1,5 +1,6 @@
 // Archivo character.routes.js dentro de la carpeta routes
 const express = require('express');
+const mongoose = require('mongoose');
 const Car = require('../models/Car');
 const filesMiddleware = require('../middlewares/files.middleware')
 const router = express.Router();
@@ -49,7 +50,7 @@ router.get('/marca/:marca', async (req, res) => {
 	}
 });
 
-router.post('/create', [filesMiddleware.upload.single('foto'), filesMiddleware.uploadToCloudinary], async (req, res, next) => {
+router.post('/create', [fileMiddleware.upload.single('image'), fileMiddleware.uploadToCloudinary], async (req, res, next) => {
 	try {
 	  const cloudinaryUrl = req.file_url ? req.file_url : null;
 	  const { marca, modelo, potencia, mercado = 'Europeo' } = req.body;
