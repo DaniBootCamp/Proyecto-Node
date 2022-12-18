@@ -50,7 +50,7 @@ router.get('/marca/:marca', async (req, res) => {
 	}
 });
 
-router.post('/create', [fileMiddleware.upload.single('image'), fileMiddleware.uploadToCloudinary], async (req, res, next) => {
+router.post('/create', [filesMiddleware.upload.single('image'), filesMiddleware.uploadToCloudinary], async (req, res, next) => {
 	try {
 	  const cloudinaryUrl = req.file_url ? req.file_url : null;
 	  const { marca, modelo, potencia, mercado = 'Europeo' } = req.body;
